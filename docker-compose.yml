@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  # backend:
+  #   image: ${NAME}-back-img
+  #   container_name: ${NAME}-back-container
+  #   build:
+  #     context: ./backend
+  #   env_file: # seaparate
+  #     - .env
+  #   init: true
+  #   networks:
+  #     - front-back
+  #   ports:
+  #     - 8000:8000
+
+  frontend:
+    image: ${NAME}-front-img
+    container_name: ${NAME}-front-container
+    build:
+      context: ./frontend
+    env_file:
+      - .env
+    init: true
+    networks:
+      - front-back
+
+networks:
+  front-back:
+    name: front-back
