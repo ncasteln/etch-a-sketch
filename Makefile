@@ -1,15 +1,18 @@
-NAME		:=	project-name
-CONTAINER	:=	$(NAME)-container
-IMAGE		:=	$(NAME)-img
+NAME			:=	etch-a-sketch
+IMG_NAME		:=	$(NAME)-img
+CONT_NAME		:=	$(NAME)-cont
+
+# CONTAINER	:=	$(NAME)-container
+# IMAGE		:=	$(NAME)-img
 ENV_FILE	:=	.env
 
 # docker commands
-CONT_EXISTS	:=	$$(docker ps -a | grep $(CONTAINER) | wc -l) -ge 1
-IMG_EXISTS	:=	$$(docker images | grep $(IMAGE) | wc -l) -ge 1
-IS_RUNNING	:=	$$(docker ps -a --filter "status=running" | grep $(CONTAINER) | wc -l) -ge 1
-STOP		:=	docker stop $(CONTAINER) >/dev/null;
-RM_CONT		:=	docker rm $(CONTAINER) >/dev/null;
-RM_IMAGE	:=	docker rmi -f $$(docker images -a --quiet);
+# CONT_EXISTS	:=	$$(docker ps -a | grep $(CONTAINER) | wc -l) -ge 1
+# IMG_EXISTS	:=	$$(docker images | grep $(IMAGE) | wc -l) -ge 1
+# IS_RUNNING	:=	$$(docker ps -a --filter "status=running" | grep $(CONTAINER) | wc -l) -ge 1
+# STOP		:=	docker stop $(CONTAINER) >/dev/null;
+# RM_CONT		:=	docker rm $(CONTAINER) >/dev/null;
+# RM_IMAGE	:=	docker rmi -f $$(docker images -a --quiet);
 
 # colors
 G	:=	\033[0;32m
@@ -22,7 +25,6 @@ N	:=	\033[1;30m
 .PHONY: up down build check display rm rm-img stop bash
 
 ######################################################################
-# https://dev.to/ysmnikhil/how-to-build-with-react-or-vue-with-vite-and-docker-1a3l
 up: build
 	@echo "$(G)* Composing up...$(W)";
 	@docker compose up -d;
@@ -32,7 +34,7 @@ build: $(ENV_FILE)
 	@docker compose build;
 
 $(ENV_FILE):
-	@./tools/create-env.sh $(NAME)
+	@./tools/create-env.sh $(NAME) $(IMG_NAME) $(CONT_NAME)
 
 down:
 	@echo "$(G)* Composing down...$(W)";
@@ -40,7 +42,7 @@ down:
 
 # checker for running
 check:
-	@if [ $(IS_RUNNING) ]; then \
+	@if [ $$(docker ps -a --filter "status=running" | grep $(CONT_NAME) | wc -l) -ge 1 ]; then \
 		echo "$(G)* $(NAME) is running$(W)"; \
 	else \
 		echo "$(R)* $(NAME) not running$(W)"; \
@@ -48,36 +50,36 @@ check:
 
 # checker for running
 bash:
-	@if [ $(IS_RUNNING) ]; then \
-		docker exec -it $(CONTAINER) /bin/bash; \
+	@if [ $$(docker ps -a --filter "status=running" | grep $(CONT_NAME) | wc -l) -ge 1 ]; then \
+		docker exec -it $(CONT_NAME) /bin/bash; \
 	else \
 		echo "$(R)* $(NAME) not running$(W)"; \
 	fi
 
 # cleanings for the current project
 stop:
-	@if [ $(IS_RUNNING) ]; then \
-		$(STOP) \
+	@if [ $$(docker ps -a --filter "status=running" | grep $(CONT_NAME) | wc -l) -ge 1 ]; then \
+		docker stop $(CONT_NAME) >/dev/null; \
 		echo "$(G)* Container stopped$(W)"; \
 	else \
 		echo "$(N)* Nothing to stop$(W)"; \
 	fi
 
 rm:
-	@if [ $(IS_RUNNING) ]; then \
+	@if [ $$(docker ps -a --filter "status=running" | grep $(CONT_NAME) | wc -l) -ge 1 ]; then \
 		echo "$(R)* Container is running, first stop it$(W)"; \
 		exit 1; \
 	fi
-	@if [ $(CONT_EXISTS) ]; then \
-		$(RM_CONT) \
+	@if [ $$(docker ps -a | grep $(CONT_NAME) | wc -l) -ge 1 ]; then \
+		docker rm $(CONT_NAME) >/dev/null; \
 		echo "$(G)* Container removed$(W)"; \
 	else \
 		echo "$(N)* No container to remove$(W)"; \
 	fi
 
 rm-img: rm
-	@if [ $(IMG_EXISTS) ]; then \
-		$(RM_IMAGE) \
+	@if [ $$(docker images | grep $(IMG_NAME) | wc -l) -ge 1 ]; then \
+		docker rmi -f $$(docker images -a --quiet); \
 		echo "$(G)* Image removed$(W)"; \
 	else \
 		echo "$(N)* No image to remove$(W)"; \

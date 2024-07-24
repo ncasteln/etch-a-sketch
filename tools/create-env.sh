@@ -7,6 +7,8 @@ F_YELLOW="\033[33m"
 F_BLUE="\033[34m"
 
 NAME=$1
+IMG_NAME=$2
+CONT_NAME=$3
 
 echo -e "${F_BLUE}************** [ Creating .env file for '$NAME' ] **************${RESET}";
 echo -e "Define the variables in a key=value form (no spaces allowed).";
@@ -18,6 +20,8 @@ if [[ -e ".env" ]]; then
 fi
 
 echo "NAME=$NAME" > .env;
+echo "IMG_NAME=$IMG_NAME" >> .env;
+echo "CONT_NAME=$CONT_NAME" >> .env;
 
 # read user prompt to store variables
 while true; do

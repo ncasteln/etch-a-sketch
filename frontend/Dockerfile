@@ -1,16 +1,24 @@
-# build stage
-FROM ubuntu:latest
+FROM node:alpine
 
-RUN apt-get update && apt-get install -y \
-	npm
+RUN mkdir -p /app
 
-# WORKDIR /app
+COPY ./ /app/frontend
 
-# RUN npm install && npm cache clean --force
-# COPY . .
+WORKDIR /app/frontend
+RUN npm init -y
+RUN npm install
+RUN npm run build
 
-# EXPOSE 3000
+EXPOSE $PORT
 
-# COPY package*.json ./
+# Set host to localhost / the docker image
+ENV NUXT_HOST=0.0.0.0
+# Set app port
+ENV NUXT_PORT=$PORT
+# Set the base url
+ENV PROXY_API=$PROXY_API
+# Set the browser base url
+ENV PROXY_LOGIN=$PROXY_LOGIN
 
-ENTRYPOINT [ "tail", "-f" ]
+# CMD [ "npm", "start" ]
+CMD [ "tail", "-f" ]
