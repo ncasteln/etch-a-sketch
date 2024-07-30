@@ -1,23 +1,33 @@
-
+"use strict"
 
 document.addEventListener("DOMContentLoaded", app);
 
 function app() {
-	renderGrid();
+	defaultGrid();
 	renderPalette();
 	addListeners();
 };
 
-function renderGrid() {
+function defaultGrid() {
 	const grid = document.getElementById("grid");
-	let nVerticalCells = Math.floor(window.innerHeight / 50);
 
-	for (let i = 0; i < 50; i++) {
-		for (let j = 0; j < nVerticalCells; j++) {
-			const cell = document.createElement("div");
-			cell.className = "cell";
-			grid.appendChild(cell);
-		}
+	const idealCellSize = 20;
+	const gridWidth = grid.offsetWidth;
+	const gridHeight = grid.offsetHeight;
+
+	let cols = Math.floor(gridWidth / idealCellSize);
+	let rows = Math.floor(gridHeight / idealCellSize);
+
+	const adjustedCellWidth = gridWidth / cols;
+	const adjustedCellHeight = gridHeight / rows;
+	const totalCells = rows * cols;
+
+	for (let i = 0; i < totalCells; i++) {
+		const cell = document.createElement("div");
+		cell.className = "cell";
+		cell.style.width = `${adjustedCellWidth}px`;
+		cell.style.height = `${adjustedCellHeight}px`;
+		grid.appendChild(cell);
 	}
 };
 
@@ -37,7 +47,7 @@ function renderPalette( ) {
 	];
 	colors.forEach(colorName => {
 		const color = document.createElement("div");
-		color.classList.add("color", colorName);
+		color.classList.add("color", colorName); // change and void class
 		palette.appendChild(color);
 	});
 }
@@ -62,17 +72,27 @@ function addListeners() {
 }
 
 function selectColor(state) {
+	document.querySelectorAll(".color").forEach((color) => {
+		color.classList.remove("selected");
+	})
 	state.selectedColor = this.classList[1];
+	this.classList.add("selected");
 }
 
 function paintOne(state) {
 	state.isMouseDown = true;
-	this.classList.add(state.selectedColor);
+	this.style.backgroundColor = state.selectedColor;
 }
 
 function paintDrag(cell, state) {
+	if (!state.isMouseDown) {
+		document.querySelectorAll(".cell").forEach((cell) => {
+			cell.classList.remove("hovered");
+		})
+		cell.classList.add("hovered");
+	}
 	if (state.isMouseDown)
-		cell.classList.add(state.selectedColor);
+		cell.style.backgroundColor = state.selectedColor;
 }
 
 /*	NOTES

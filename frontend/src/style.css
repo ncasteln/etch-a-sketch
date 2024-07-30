@@ -47,56 +47,69 @@ table {
 	border-spacing: 0;
 }
 
-/* CUROM STYLE */
-h1 {
-	text-align: center;
-	font-size: 50px;
-	color: rgb(0, 0, 0);
+* {
+	/* outline: 1px solid rgb(170, 19, 19); */
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+html {
+	background-color: rgb(255, 0, 0);
 }
 
+/* CUSTOM STYLE */
 body {
-	display: flex;
-	background-color: rebeccapurple;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgb(0, 0, 0);
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 }
 
 /* WRAPPER */
 .wrapper {
-	background-color: rgb(255, 0, 0);
+	width: 100%;
+	height: 100%;
 	display: flex;
 	flex-direction: row;
-	justify-content:space-around;
+	background-color: rgb(0, 0, 0);
 }
 
 /* PALETTE */
 #palette {
+	width: 10%;
+	max-width: 100px;
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
-	padding: 20px;
-	background-color: rgb(94, 94, 94);
+	background-color: rgb(177, 175, 57);
 }
 .color {
-	width: 30px;
-	height: 30px;
+	width: 100%;
+	flex-grow: 1;
 }
 .selected {
-	border: 1px solid black;
+	border: 5px solid hsla(0, 0%, 100%, 0.5);
 }
 
 /* GRID */
 #grid {
-	background-color: rgb(143, 143, 143);
 	width: 100%;
-	display: grid;
-	grid-template-columns: repeat(50, 15px);
+	display: flex;
+	flex-wrap: wrap;
+	align-content: flex-start;
 }
 
 .cell {
-	width: 15px;
-	height: 15px;
-	border: 1px solid rgb(218, 218, 218);
+	flex-grow: 1;
+	border: 1px solid rgb(210, 210, 210);
 	background-color: rgb(231, 231, 231);
+	transition: filter 0.1s;
 }
+.hovered {
+	filter: brightness(1.2);
+}
+/* try removing them!!!!!! */
 .black { background-color: black; }
 .white { background-color: white; }
 .red { background-color: red; }
