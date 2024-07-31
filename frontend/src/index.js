@@ -1,5 +1,7 @@
 "use strict"
 
+const MOUSE_LEFT = 0
+
 document.addEventListener("DOMContentLoaded", app);
 
 function app() {
@@ -47,7 +49,7 @@ function renderPalette( ) {
 	];
 	colors.forEach(colorName => {
 		const color = document.createElement("div");
-		color.classList.add("color", colorName); // change and void class
+		color.classList.add("color", colorName);
 		palette.appendChild(color);
 	});
 }
@@ -60,48 +62,43 @@ function addListeners() {
 
 	// selecting color logic
 	document.querySelectorAll(".color").forEach((color) => {
-		color.addEventListener("click", selectColor.bind(color, state));				// bind()
+		color.state = state;
+		color.addEventListener("click", function(e) {
+			if (e.button != MOUSE_LEFT) return ;
+			e.preventDefault();
+			resetValue(".color", "selected");
+			let domElement = e.currentTarget;
+			domElement.state.selectedColor = domElement.classList[1];
+			domElement.classList.add("selected");
+		});
 	})
 
 	// painting logic
 	document.querySelectorAll(".cell").forEach((cell) => {
-		cell.addEventListener("mousedown", paintOne.bind(cell, state));					// bind()
-		cell.addEventListener("mouseover", () => paintDrag(cell, state));				// arrow function
-		cell.addEventListener("mouseup", function() { state.isMouseDown = false; });	// inline function
+		cell.state = state;
+		cell.addEventListener("mousedown", function(e) {
+			if (e.button != MOUSE_LEFT) return ;
+			e.preventDefault();
+			let domElement = e.currentTarget;
+			domElement.state.isMouseDown = true;
+			domElement.style.backgroundColor = domElement.state.selectedColor;
+		});
+		cell.addEventListener("mouseover", function(e) {
+			if (e.button != MOUSE_LEFT) return ;
+			e.preventDefault();
+			let domElement = e.currentTarget;
+			if (!domElement.state.isMouseDown) {
+				resetValue(".cell", "hovered");
+				domElement.classList.add("hovered");
+			}
+			if (domElement.state.isMouseDown)
+				domElement.style.backgroundColor = domElement.state.selectedColor;
+		});
+		cell.addEventListener("mouseup", function(e) {
+			if (e.button != MOUSE_LEFT) return ;
+			e.preventDefault();
+			let domElement = e.currentTarget;
+			domElement.state.isMouseDown = false;
+		});
 	})
 }
-
-function selectColor(state) {
-	document.querySelectorAll(".color").forEach((color) => {
-		color.classList.remove("selected");
-	})
-	state.selectedColor = this.classList[1];
-	this.classList.add("selected");
-}
-
-function paintOne(state) {
-	state.isMouseDown = true;
-	this.style.backgroundColor = state.selectedColor;
-}
-
-function paintDrag(cell, state) {
-	if (!state.isMouseDown) {
-		document.querySelectorAll(".cell").forEach((cell) => {
-			cell.classList.remove("hovered");
-		})
-		cell.classList.add("hovered");
-	}
-	if (state.isMouseDown)
-		cell.style.backgroundColor = state.selectedColor;
-}
-
-/*	NOTES
-	• ARROW FUNCTIONS: (this) is inherited from the outer context in which they are defined.
-	In case of addEventListener() the inherited context would be the window object.
-	• "use strict": good practice to set, otherwise everytime this could potentially point
-	to the global OR window object.
-
-	• this: is unbound, means, evaluated run-time (tricky to understand in this way) ---- restart from here https://javascript.info/bind
-
-
-*/
