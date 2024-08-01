@@ -2,18 +2,6 @@ NAME			:=	etch-a-sketch
 IMG_NAME		:=	$(NAME)-img
 CONT_NAME		:=	$(NAME)-cont
 
-# CONTAINER	:=	$(NAME)-container
-# IMAGE		:=	$(NAME)-img
-ENV_FILE	:=	.env
-
-# docker commands
-# CONT_EXISTS	:=	$$(docker ps -a | grep $(CONTAINER) | wc -l) -ge 1
-# IMG_EXISTS	:=	$$(docker images | grep $(IMAGE) | wc -l) -ge 1
-# IS_RUNNING	:=	$$(docker ps -a --filter "status=running" | grep $(CONTAINER) | wc -l) -ge 1
-# STOP		:=	docker stop $(CONTAINER) >/dev/null;
-# RM_CONT		:=	docker rm $(CONTAINER) >/dev/null;
-# RM_IMAGE	:=	docker rmi -f $$(docker images -a --quiet);
-
 # colors
 G	:=	\033[0;32m
 Y	:=	\033[0;33m
@@ -29,12 +17,9 @@ up: build
 	@echo "$(G)* Composing up...$(W)";
 	@docker compose up -d;
 
-build: $(ENV_FILE)
+build:
 	@echo "$(G)* Composing build...$(W)";
 	@docker compose build;
-
-$(ENV_FILE):
-	@./tools/create-env.sh $(NAME) $(IMG_NAME) $(CONT_NAME)
 
 down:
 	@echo "$(G)* Composing down...$(W)";

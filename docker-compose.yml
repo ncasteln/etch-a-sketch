@@ -1,39 +1,11 @@
 services:
-  allin:
+  frontend:
     image: ${IMG_NAME}
     container_name: ${CONT_NAME}
     build:
       context: ./frontend
     environment:
       PORT: 3000
-    # PROXY_API: http://backend:8080/
-    # env_file:
-    #   - .env
     init: true
     ports:
       - 3000:80
-
-  # frontend:
-  #   image: ${IMG_NAME}
-  #   container_name: ${CONT_NAME}
-  #   # image: ${NAME}-front-img
-  #   # container_name: ${NAME}-front-container
-  #   build:
-  #     context: ./frontend
-  #   environment:
-  #     PORT: 3000
-  #     PROXY_API: http://backend:8080/
-  #   # env_file:
-  #   #   - .env
-  #   init: true
-  #   ports:
-  #     - 3000:3000
-
-  # backend:
-  #   image: ${NAME}-back-img
-  #   container_name: ${NAME}-back-container
-  #   build:
-  #     context: ./backend
-  #   init: true
-  #   ports:
-  #     - 8080:8080

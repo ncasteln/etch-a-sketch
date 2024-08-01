@@ -102,3 +102,9 @@ function addListeners() {
 		});
 	})
 }
+
+function resetValue(element, classToRemove) {
+	document.querySelectorAll(element).forEach(element => {
+		element.classList.remove(classToRemove);
+	});
+}
