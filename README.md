@@ -18,3 +18,10 @@ Since the subject reuired to use flexbox for the grid, I read about the flexbox 
 
 ### DOM manipulation
 About DOM I had a reviewing about using javaScript to create HTML elements, manipulate their attributes and CSS styling, add event listener functions which update a very simple state. Important notes: need to do a small research about the best practices to organize `addEventListener()` functions.
+
+## Try it out
+The project is built using a simple docker container. After cloning, just `make` and then access the project to http://localhost:3000.
+```bash
+git clone https://github.com/ncasteln/etch-a-sketch.git;
+cd etch-a-sketch && make;
+```
